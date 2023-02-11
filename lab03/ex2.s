@@ -37,14 +37,14 @@ main:
     sw s3, 12(sp)
     sw ra, 16(sp)
     # END PROLOGUE
-    addi t0, x0, 0
-    addi s0, x0, 0
-    la s1, source
-    la s2, dest
+    addi t0, x0, 0 # t0 -> k
+    addi s0, x0, 0 # s0 -> sum
+    la s1, source # &source[0]
+    la s2, dest # &dest[0]
 loop:
-    slli s3, t0, 2
-    add t1, s1, s3
-    lw t2, 0(t1)
+    slli s3, t0, 2 # s3 = t0 << 2 = t0 * 4
+    add t1, s1, s3 # &source[t0]
+    lw t2, 0(t1) # source[t0]
     beq t2, x0, exit
     add a0, x0, t2
     addi sp, sp, -8
@@ -55,9 +55,9 @@ loop:
     lw t2, 4(sp)
     addi sp, sp, 8
     add t2, x0, a0
-    add t3, s2, s3
-    sw t2, 0(t3)
-    add s0, s0, t2
+    add t3, s2, s3 # &dest[t0]
+    sw t2, 0(t3) # dest[t0] = t2
+    add s0, s0, t2 # sum += dest[k]
     addi t0, t0, 1
     jal x0, loop
 exit:
